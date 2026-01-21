@@ -1,0 +1,32 @@
+apiVersion: apps.mas.ibm.com/v1
+kind: ManageWorkspace
+metadata:
+  name: max-max
+  namespace: mas-max-manage
+  labels:
+    mas.ibm.com/applicationId: manage
+    mas.ibm.com/instanceId: max
+    mas.ibm.com/workspaceId: max
+spec:
+  bindings:
+    jdbc: system
+  components:
+    base:
+      version: latest
+    transportation:
+      version: latest
+    acm:
+      version: latest
+  settings:
+    deployment:
+      autoGenerateEncryptionKeys: true
+      buildTag: latest
+      defaultJMS: false
+      mode: up
+      persistentVolumes: []
+      serverTimezone: GMT
+      resources:
+    serverBundles:
+      limits:
+        cpu: '4'
+        memory: '4'

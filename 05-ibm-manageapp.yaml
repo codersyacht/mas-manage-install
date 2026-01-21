@@ -1,0 +1,12 @@
+apiVersion: apps.mas.ibm.com/v1
+kind: ManageApp
+metadata:
+  name: max
+  namespace: mas-max-manage
+  finalizers:
+    - manageapp.apps.mas.ibm.com/finalizer
+  labels:
+    mas.ibm.com/applicationId: manage
+    mas.ibm.com/instanceId: max
+spec: {}
+
