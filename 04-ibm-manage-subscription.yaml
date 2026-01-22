@@ -4,10 +4,10 @@ metadata:
   name: ibm-mas-manage
   namespace: mas-max-manage
 spec:
-  channel: 9.1.x
+  channel: 9.2.x-feature
   installPlanApproval: Automatic
   name: ibm-mas-manage
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: ibm-mas-manage.v9.1.7
+  startingCSV: ibm-mas-manage.v9.2.0-pre.stable-6856
 
