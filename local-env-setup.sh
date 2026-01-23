@@ -38,22 +38,9 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 cd /home/admin/apps/SMP/maximo/applications/maximo/properties
 
-PUBLIC_IP=$(ip -4 addr show eth1 | awk '/inet / {print $2}' | cut -d/ -f1)
+echo "mxe.db.DB2sslConnection=false" >> maximo.properties
+echo "mxe.logging.CorrelationEnabled=0" >> maximo.properties
 
-echo "$PUBLIC_IP"
-
-mv maximo.properties maximo-original.properties
-
-cat >maximo.properties<<EOF
-mxe.name=MXServer
-mxe.db.url=jdbc:db2://${PUBLIC_IP}:50000/MAXIMO
-mxe.db.driver=com.ibm.db2.jcc.DB2Driver
-mxe.db.user=db2inst1
-mxe.db.password=LabMachine4@Training
-mxe.db.schemaowner=MAXIMO
-mxe.db.DB2sslConnection=false
-mxe.logging.CorrelationEnabled=0
-EOF
 
 cd /home/admin/apps/SMP/maximo/deployment/was-liberty-default/config-deployment-descriptors/maximo-all/maximouiweb/webmodule/WEB-INF
 mv web.xml web-original.xml
