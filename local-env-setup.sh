@@ -42,7 +42,7 @@ PUBLIC_IP=$(ip -4 addr show eth1 | awk '/inet / {print $2}' | cut -d/ -f1)
 
 echo "$PUBLIC_IP"
 
-cat > maximo.properties<<EOF
+cat >maximo.properties<<EOF
 mxe.name=MXServer
 mxe.db.url=jdbc:db2://${PUBLIC_IP}:50000/MAXIMO
 mxe.db.driver=com.ibm.db2.jcc.DB2Driver
@@ -75,7 +75,7 @@ cd /home/admin/apps/SMP/maximo/deployment/was-liberty-default/
 
 cd /home/admin/apps
 
-cat > java-home.txt <<'EOF'
+cat >java-home.txt<<'EOF'
 export JAVA_HOME=/home/admin/apps/jdk17
 export PATH=$JAVA_HOME/bin:$PATH
 EOF
@@ -119,7 +119,15 @@ rm -rf manage
 cd manage
 
 
-cat > server.xml <<'EOF'
+cat >jvm.options<<'EOF'
+-Dcom.ibm.mq.cfg.jmqi.useMQCSPauthentication=true
+-Dfile.encoding=UTF8
+-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
+-Xms8192m
+-Xmx8192m
+EOF
+
+cat >server.xml<<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="new server">
 	<!-- Enable features -->
@@ -183,15 +191,6 @@ cat > server.xml <<'EOF'
 
 	<applicationManager autoExpand="true"/>
 </server>
-EOF
-
-
-cat > jvm.options <<'EOF'
--Dcom.ibm.mq.cfg.jmqi.useMQCSPauthentication=true
--Dfile.encoding=UTF8
--agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
--Xms8192m
--Xmx8192m
 EOF
 
 
