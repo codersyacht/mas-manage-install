@@ -42,6 +42,8 @@ PUBLIC_IP=$(ip -4 addr show eth1 | awk '/inet / {print $2}' | cut -d/ -f1)
 
 echo "$PUBLIC_IP"
 
+mv maximo.properties maximo-original.properties
+
 cat >maximo.properties<<EOF
 mxe.name=MXServer
 mxe.db.url=jdbc:db2://${PUBLIC_IP}:50000/MAXIMO
