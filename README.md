@@ -4,7 +4,7 @@
 
 This document illustrates Operator Hub based installation of Maximo Application Manage including manual installation of all the integration components.
 
-<img width="687" alt="image" src="https://github.ibm.com/maximo-application-suite/mas-manage-install/assets/438149/2451ef03-4b3c-4555-aad1-d31c69d16a28">
+<img width="1374" height="774" alt="image" src="https://github.com/user-attachments/assets/37e680c5-8f63-4080-9e00-f78f2012e7ad" />
 
 
 **Prerequisite**
@@ -13,19 +13,19 @@ This document illustrates Operator Hub based installation of Maximo Application 
 
 (ii) DB2 has to be installed. If this step is already performed as part of mas suite install, then this can be skipped. If not follow the instructions below to install Db2. <br>
 
-[Setup](https://github.ibm.com/maximo-application-suite/knowledge-center/blob/main/devops/db2/01-Setup.md) <br>
-[Create DB](https://github.ibm.com/maximo-application-suite/knowledge-center/blob/main/devops/db2/02-Create-DB.md) <br>
-[Configure TableSpace](https://github.ibm.com/maximo-application-suite/knowledge-center/blob/main/devops/db2/03-Create-Tablespace.md) <br>
+[Setup](https://github.com/codersyacht/maximo-knowledge-center/blob/main/devops/db2/setup.md) <br>
+[Create Dstabase](https://github.com/codersyacht/maximo-knowledge-center/blob/main/devops/db2/create-db.md) <br>
+[Configure Database](https://github.com/codersyacht/maximo-knowledge-center/blob/main/devops/db2/configuration.md) <br>
 
 (iii) The _Install MAS JdbcCfg_ section in the mas suite install repository has to be completed post database installation. Refer [here](https://github.ibm.com/maximo-application-suite/mas-suite-install)
 ### Cloning this Git Repository.
 
-Create a git account here: https://github.ibm.com
+Create a git account here: https://github.com
 
 Clone this repository to begin installation.
 
 ```CMD
-git clone https://github.ibm.com/maximo-application-suite/mas-manage-install
+git clone https://github.com/codersyacht/mas-manage-install
 ```
 username: &lt;your-git-account-userid>&gt; <br>
 password:  &lt;your-git-personal-access-token>&gt;
