@@ -17,7 +17,7 @@ This document illustrates Operator Hub based installation of Maximo Application 
 [Create Dstabase](https://github.com/codersyacht/maximo-knowledge-center/blob/main/devops/db2/create-db.md) <br>
 [Configure Database](https://github.com/codersyacht/maximo-knowledge-center/blob/main/devops/db2/configuration.md) <br>
 
-(iii) The _Install MAS JdbcCfg_ section in the mas suite install repository has to be completed post database installation. Refer [here](https://github.ibm.com/maximo-application-suite/mas-suite-install)
+(iii) The _Install MAS JdbcCfg_ section in the mas suite install repository has to be completed post database installation. Refer [here](https://github.com/codersyacht/mas-suite-install)
 ### Cloning this Git Repository.
 
 Create a git account here: https://github.com
