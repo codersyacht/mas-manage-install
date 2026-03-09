@@ -73,3 +73,11 @@ oc apply -f 05-ibm-manageapp.yaml
 ```CMD
 oc apply -f 06-ibm-manageworkspace.yaml
 ```
+
+## Success Criteria
+
+Successfully installed Maximo Manage Application.
+
+## Next Step
+
+Follow the instruction [here](https://github.com/codersyacht/maximo-knowledge-center/blob/main/maximo/set-up.md) for initial configuration.
