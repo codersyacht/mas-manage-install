@@ -80,7 +80,7 @@ Successfully installed Maximo Manage Application.
 
 ## Next Step
 
-Follow the instruction [here](https://github.com/codersyacht/maximo-knowledge-center/blob/main/maximo/security/change-password.md) to set the maxadmin user passord.
+Follow the instruction [here](https://github.com/codersyacht/maximo-knowledge-center/blob/main/maximo/security/change-password.md) to set the maxadmin user password.
 
 Execute the following command from the mas-manage-install to extract to local copy of the manage instance.
 
