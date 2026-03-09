@@ -80,4 +80,10 @@ Successfully installed Maximo Manage Application.
 
 ## Next Step
 
-Follow the instruction [here](https://github.com/codersyacht/maximo-knowledge-center/blob/main/maximo/set-up.md) for initial configuration.
+Follow the instruction [here](https://github.com/codersyacht/maximo-knowledge-center/blob/main/maximo/security/change-password.md) to set the maxadmin user passord.
+
+Execute the following command from the mas-manage-install to extract to local copy of the manage instance.
+
+```CMD
+./local-env-setup.sh
+```
