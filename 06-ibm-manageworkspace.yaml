@@ -13,6 +13,10 @@ spec:
   components:
     base:
       version: latest
+    serviceprovider:
+      version: latest
+    spatial:
+      version: latest
     transportation:
       version: latest
     acm:
