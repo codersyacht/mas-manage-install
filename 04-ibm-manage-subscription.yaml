@@ -9,5 +9,5 @@ spec:
   name: ibm-mas-manage
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: ibm-mas-manage.v9.1.11
+  startingCSV: ibm-mas-manage.v9.1.15
 
