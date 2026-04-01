@@ -104,6 +104,8 @@ cd ../usr/servers
 rm -rf manage
 ../../bin/server create manage
 
+cd manage
+
 cat >jvm.options<<'EOF'
 -Dcom.ibm.mq.cfg.jmqi.useMQCSPauthentication=true
 -Dfile.encoding=UTF8
