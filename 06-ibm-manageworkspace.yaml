@@ -21,6 +21,10 @@ spec:
       version: latest
     acm:
       version: latest
+   icd:
+      version: latest
+   oilandgas:
+      version: latest
   settings:
     deployment:
       autoGenerateEncryptionKeys: true
