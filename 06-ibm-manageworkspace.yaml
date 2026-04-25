@@ -21,9 +21,9 @@ spec:
       version: latest
     acm:
       version: latest
-   icd:
+    icd:
       version: latest
-   oilandgas:
+    oilandgas:
       version: latest
   settings:
     deployment:
