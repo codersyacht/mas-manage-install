@@ -34,6 +34,11 @@ spec:
       persistentVolumes: []
       serverTimezone: GMT
       resources:
+    languages:
+      baseLang: EN
+      secondaryLangs:
+        - AR
+        - FR
     serverBundles:
       limits:
         cpu: '4'
