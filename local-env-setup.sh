@@ -4,7 +4,7 @@ rm -rf jdk17
 
 rm -rf SMP
 
-wget -O java.tgz https://github.com/ibmruntimes/semeru17-certified-binaries/releases/download/jdk-17.0.16%2B8_openj9-0.53.0/ibm-semeru-certified-jdk_x64_linux_17.0.16.0.tar.gz
+wget -O java.tgz https://github.com/ibmruntimes/semeru17-certified-binaries/releases/download/jdk-17.0.19.0/ibm-semeru-certified-jdk_x64_linux_17.0.19.0.tar.gz
 
 tar -xvf java.tgz
 
@@ -76,7 +76,7 @@ java -version
 if [ ! -d "webprofile-8" ]; then
     echo "webprofile-8 directory not found. Downloading WebSphere Liberty..."
     wget -O webprofile-8.zip \
-      https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/24.0.0.11/wlp-webProfile8-24.0.0.11.zip
+      https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/26.0.0.5/wlp-webProfile8-26.0.0.5.zip
       unzip webprofile-8.zip
       rm webprofile-8.zip
       mv wlp webprofile-8
