@@ -1,18 +1,21 @@
 cd /home/admin/apps
 
-rm -rf jdk17
+JAVA_VERSION="https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25.0.3.0/ibm-semeru-certified-jdk_x64_linux_25.0.3.0.tar.gz"
+WAS_VERSION="https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/26.0.0.5/wlp-webProfile8-26.0.0.5.zip"
+
+rm -rf jdk25
 
 rm -rf SMP
 
-wget -O java.tgz https://github.com/ibmruntimes/semeru17-certified-binaries/releases/download/jdk-17.0.16%2B8_openj9-0.53.0/ibm-semeru-certified-jdk_x64_linux_17.0.16.0.tar.gz
+wget -O java.tgz "$JAVA_VERSION"
 
 tar -xvf java.tgz
 
 rm -rf java.tgz
 
-mv jdk-17.0.16+8 jdk17
+mv jdk-25* jdk25
 
-chmod 755 -R jdk17
+chmod 755 -R jdk25
 
 eval $(crc oc-env)
 
@@ -30,7 +33,7 @@ mkdir -p java/jre
 
 cd java
 
-cp -r /home/admin/apps/jdk17/* ./jre
+cp -r /home/admin/apps/jdk25/* ./jre
 
 export JAVA_HOME=/home/admin/apps/SMP/maximo/tools/java/jre
 
@@ -65,26 +68,25 @@ cd /home/admin/apps/SMP/maximo/deployment/was-liberty-default/
 cd /home/admin/apps
 
 cat >java-home.txt<<'EOF'
-export JAVA_HOME=/home/admin/apps/jdk17
+export JAVA_HOME=/home/admin/apps/jdk25
 export PATH=$JAVA_HOME/bin:$PATH
 EOF
-export JAVA_HOME=/home/admin/apps/jdk17
+export JAVA_HOME=/home/admin/apps/jdk25
 export PATH=$JAVA_HOME/bin:$PATH
 
 java -version
 
-if [ ! -d "webprofile-8" ]; then
-    echo "webprofile-8 directory not found. Downloading WebSphere Liberty..."
-    wget -O webprofile-8.zip \
-      https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/26.0.0.5/wlp-webProfile8-26.0.0.5.zip
-      unzip webprofile-8.zip
-      rm webprofile-8.zip
-      mv wlp webprofile-8
+if [ ! -d "wlp" ]; then
+    echo "wlp directory not found. Downloading WebSphere Liberty..."
+    wget -O wlp.zip \
+      "$WAS_VERSION"
+      unzip wlp.zip
+      rm wlp.zip
 else
-    echo "webprofile-8 directory already exists. Skipping download."
+    echo "wlp directory already exists. Skipping download."
 fi
 
-cd /home/admin/apps/webprofile-8/bin
+cd /home/admin/apps/wlp/bin
       ./featureUtility installFeature javaMail-1.6
       ./featureUtility installFeature jdbc-4.2
       ./featureUtility installFeature jaxws-2.2
@@ -102,9 +104,9 @@ cd /home/admin/apps/webprofile-8/bin
       ./featureUtility installFeature springBoot-3.0
       ./featureUtility installFeature wasjmssecurity-1.0
 
-cd /home/admin/apps/webprofile-8/usr/servers
+cd /home/admin/apps/wlp/usr/servers
 rm -rf manage
-/home/admin/apps/webprofile-8/bin/server create manage
+/home/admin/apps/wlp/bin/server create manage
 cd manage
 
 
@@ -183,9 +185,8 @@ cat >server.xml<<'EOF'
 EOF
 
 
-cd /home/admin/apps/webprofile-8/usr/servers/manage/dropins
+cd /home/admin/apps/wlp/usr/servers/manage/dropins
 
-mv /home/admin/apps/SMP/maximo/deployment/was-liberty-default/deployment/maximo-all/maximo-all-server/apps/maximo-all.ear /home/admin/apps/webprofile-8/usr/servers/manage/dropins/maximo-all.ear
+mv /home/admin/apps/SMP/maximo/deployment/was-liberty-default/deployment/maximo-all/maximo-all-server/apps/maximo-all.ear /home/admin/apps/wlp/usr/servers/manage/dropins/maximo-all.ear
 
 ls
-
