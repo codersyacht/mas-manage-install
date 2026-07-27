@@ -86,7 +86,7 @@ rm -rf "$EXTRACTED_DIR"
 
 log "IBM Semeru JDK installed to $JAVA_INSTALL_DIR"
 
-rm java-home.txt
+rm -f java-home.txt
 
 cat > java-home.txt << EOF
 export JAVA_HOME=$JAVA_SRC
