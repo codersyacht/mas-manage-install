@@ -4,19 +4,24 @@ set -euo pipefail
 ###############################################################################
 # GLOBAL CONFIG
 ###############################################################################
+JAVA_VERSION="https://github.com/ibmruntimes/semeru25-binaries/releases/download/jdk-25.0.3.0/ibm-semeru-open-jdk_aarch64_mac_25.0.3.0.tar.gz"
+WAS_VERSION="https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/26.0.0.5/wlp-webProfile8-26.0.0.5.zip"
 LOCAL_BASE_DIR="/Users/jawahar/codersyacht"
-LOCAL_SMP_DIR="$LOCAL_BASE_DIR/SMP"
-LIBERTY_DIR="$LOCAL_BASE_DIR/webprofile-8"
-JAVA_SRC="/Users/jawahar/codersyacht/java/ibmjdk17/Contents/Home"
-
+DOWNLOAD_DIR="/Users/jawahar/Downloads"
 REMOTE_HOST="codehub1.fyre.ibm.com"
 REMOTE_USER="admin"
 REMOTE_PASS="LabMachine4@Training"
 REMOTE_SMP_DIR="/home/admin/apps/SMP"
 REMOTE_TAR="/home/admin/apps/SMP.tar"
-
 SQL_SA_PASSWORD="LabMachine4@Training"
 
+###############################################################################
+# DERIVED CONFIG
+###############################################################################
+JAVA_INSTALL_DIR="$LOCAL_BASE_DIR/java/ibmjdk25"
+JAVA_SRC="$JAVA_INSTALL_DIR/Contents/Home"
+LOCAL_SMP_DIR="$LOCAL_BASE_DIR/SMP"
+LIBERTY_DIR="$LOCAL_BASE_DIR/wlp"
 ###############################################################################
 # UTILS
 ###############################################################################
@@ -33,55 +38,81 @@ require_cmd() {
     exit 1
   }
 }
-
 ###############################################################################
-# PART I – MSSQL (PODMAN)
+# PART I – ORACLE (PODMAN)
 ###############################################################################
-log "PART I – MSSQL FOR MAC"
+log "PART I – ORACLE FOR MAC"
 
 require_cmd podman
 
-podman rm -f maximo-mssql 2>/dev/null || true
-podman rmi -f codersyacht/maximo-mssql:V1 2>/dev/null || true
+podman rm -f ORADB 2>/dev/null || true
+podman rmi -f codersyacht/maximo-oracle-mac:base 2>/dev/null || true
 
-podman pull codersyacht/maximo-mssql:V1
+log "Existing containers deleted."
 
-podman run -d \
-  --name maximo-mssql \
-  --hostname sql2022 \
-  -e ACCEPT_EULA=Y \
-  -e MSSQL_SA_PASSWORD="$SQL_SA_PASSWORD" \
-  -e MSSQL_PID=Developer \
-  -p 1433:1433 \
-  codersyacht/maximo-mssql:V1
+podman pull codersyacht/maximo-oracle-mac:base
 
-echo "✅ MSSQL container running"
+podman run -d --name ORADB -p 1521:1521 -p 5500:5500 -e ORACLE_PWD=LabMachine4@Training  codersyacht/maximo-oracle-mac:base
+
+echo "✅ ORACLE container running."
 
 ###############################################################################
 # PART II – JAVA + LIBERTY
 ###############################################################################
-log "PART II – JAVA + LIBERTY"
+log "PART II - JAVA + LIBERTY"
 
-if [[ ! -d "$JAVA_SRC" ]]; then
-  echo "❌ IBM Semeru JDK not found: $JAVA_SRC"
+log "Installing IBM Semeru JDK..."
+
+cd "$LOCAL_BASE_DIR"
+
+rm -rf "$JAVA_INSTALL_DIR"
+mkdir -p "$JAVA_INSTALL_DIR"
+
+wget -O "$DOWNLOAD_DIR/java.tgz" "$JAVA_VERSION"
+
+tar -xf "$DOWNLOAD_DIR/java.tgz" -C "$DOWNLOAD_DIR"
+
+EXTRACTED_DIR=$(find "$DOWNLOAD_DIR" -maxdepth 1 -type d -name "jdk-25*" | head -1)
+
+if [[ -z "$EXTRACTED_DIR" ]]; then
+  echo "❌ Could not find extracted JDK folder in $DOWNLOAD_DIR"
   exit 1
 fi
+
+mv "$EXTRACTED_DIR"/* "$JAVA_INSTALL_DIR/"
+
+rm -f "$DOWNLOAD_DIR/java.tgz"
+rm -rf "$EXTRACTED_DIR"
+
+log "IBM Semeru JDK installed to $JAVA_INSTALL_DIR"
+
+rm java-home.txt
+
+cat > java-home.txt << EOF
+export JAVA_HOME=$JAVA_SRC
+export PATH=\$JAVA_HOME/bin:\$PATH
+EOF
+
 
 export JAVA_HOME="$JAVA_SRC"
 export PATH="$JAVA_HOME/bin:$PATH"
 
+
+
 java -version
 
-cd "$LOCAL_BASE_DIR"
 
-if [[ ! -d "webprofile-8" ]]; then
-  wget https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/downloads/wlp/24.0.0.11/wlp-webProfile8-24.0.0.11.zip
-  unzip wlp-webProfile8-24.0.0.11.zip
-  mv wlp webprofile-8
-  rm wlp-webProfile8-24.0.0.11.zip
+if [ ! -d "wlp" ]; then
+    echo "wlp directory not found. Downloading WebSphere Liberty..."
+    wget -O wlp.zip \
+      "$WAS_VERSION"
+      unzip wlp.zip
+      rm wlp.zip
+else
+    echo "wlp directory already exists. Skipping download."
 fi
 
-cd webprofile-8/bin
+cd wlp/bin
 ./featureUtility installFeature jdbc-4.2 servlet-4.0 || true
 ./featureUtility installFeature javaMail-1.6 || true
 ./featureUtility installFeature jdbc-4.2 || true
@@ -201,11 +232,12 @@ sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no \
   cd /home/admin/apps
   tar -cvf SMP.tar SMP
 "
-
 echo "➡️ Copying SMP.tar to local machine..."
 sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no \
 "$REMOTE_USER@$REMOTE_HOST:/home/admin/apps/SMP.tar" \
 "$LOCAL_TAR"
+
+rm -rf "$LOCAL_SMP_DIR"
 
 echo "➡️ Extracting SMP.tar into $LOCAL_BASE_DIR ..."
 cd "$LOCAL_BASE_DIR"
@@ -255,35 +287,18 @@ sed -i '' \
 "$PROPERTIES_FILE"
 
 # --------------------------------
-# ADD SQL SERVER CONFIG
+# ADD ORACLE SERVER CONFIG
 # --------------------------------
 cat <<'EOF' >> "$PROPERTIES_FILE"
 
 # -------------------------------
-# SQL Server configuration
+# Oracle Server configuration
 # -------------------------------
-mxe.db.url=jdbc:sqlserver://localhost:1433;databaseName=Maximo;encrypt=true;trustServerCertificate=true;
-mxe.db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
-mxe.db.user=sa
+mxe.db.url=jdbc:oracle:thin:@localhost:1521/OMDB
+mxe.db.driver=oracle.jdbc.OracleDriver
+mxe.db.user=maximo
 mxe.db.password=LabMachine4@Training
-mxe.db.schemaowner=dbo
-mxe.db.vendor=sqlserver
-mxe.db.dbproduct=sqlserver
-mxe.db.server.version=2022
-mxe.db.start=sqlserver
-mxe.db.sqlserver.varchar=MAXDATA
-mxe.db.sqlserver.longvarchar=MAXDATA
-
-# LOB types also stored in MAXDATA
-mxe.db.sqlserver.maxvarchar=MAXDATA
-mxe.db.sqlserver.dbclob=MAXDATA
-mxe.db.sqlserver.text=MAXDATA
-
-# Indexes → MAXINDEX
-mxe.db.sqlserver.index=MAXINDEX
-
-# Optional fallback (ignored if above are present)
-mxe.db.fileGroup=PRIMARY
+mxe.db.schemaowner=maximo
 EOF
 
 echo "✅ maximo.properties updated"
@@ -327,7 +342,7 @@ cd "$LOCAL_SMP_DIR"/maximo/deployment/was-liberty-default/
 ###############################################################################
 log "PART VIII – DEPLOY EAR"
 
-mv "$LOCAL_SMP_DIR"/maximo/deployment/was-liberty-default/deployment/maximo-all/maximo-all-server/apps/maximo-all.ear "$LOCAL_BASE_DIR"/webprofile-8/usr/servers/manage/dropins/maximo-all.ear
+mv "$LOCAL_SMP_DIR"/maximo/deployment/was-liberty-default/deployment/maximo-all/maximo-all-server/apps/maximo-all.ear "$LOCAL_BASE_DIR"/wlp/usr/servers/manage/dropins/maximo-all.ear
 
 ###############################################################################
 # DONE
