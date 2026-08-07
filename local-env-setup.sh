@@ -109,6 +109,10 @@ rm -rf manage
 /home/admin/apps/wlp/bin/server create manage
 cd manage
 
+mkdir lib
+cd lib
+curl -L -o wmq.jmsra.rar https://repo1.maven.org/maven2/com/ibm/mq/wmq.jmsra/9.3.2.0/wmq.jmsra-9.3.2.0.rar
+cd ..
 
 cat >jvm.options<<'EOF'
 -Dcom.ibm.mq.cfg.jmqi.useMQCSPauthentication=true
@@ -181,6 +185,7 @@ cat >server.xml<<'EOF'
 	<ssl id="memberConnectionConfig" sslProtocol="TLSv1.2"/>
 
 	<applicationManager autoExpand="true"/>
+	<variable name="wmqJmsClient.rar.location" value="${server.config.dir}/lib/wmq.jmsra.rar" />
 </server>
 EOF
 
