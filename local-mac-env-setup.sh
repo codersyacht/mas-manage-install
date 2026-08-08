@@ -256,7 +256,6 @@ if [[ -d "$LOCAL_SMP_DIR/writeable/maximo" ]]; then
 else
   echo "❌ SMP sync failed or layout unexpected"
   echo "   Expected: $LOCAL_SMP_DIR/writeable/maximo"
-  exit 1
 fi
 
 
