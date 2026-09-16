@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: manage-readonly
+  namespace: ""
+rules:
+  - apiGroups:
+      - apps.mas.ibm.com/v1
+    resources:
+      - manageapps
+      - manageworkspaces
+    verbs:
+      - get
+      - list
+      - watch
