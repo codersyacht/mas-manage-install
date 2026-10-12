@@ -21,6 +21,8 @@ spec:
       version: latest
     acm:
       version: latest
+    health:
+      version: latest
   settings:
     deployment:
       autoGenerateEncryptionKeys: true
